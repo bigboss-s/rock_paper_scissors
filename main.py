@@ -4,10 +4,12 @@ import numpy as np
 from keras import models
 import random
 
+
 @st.cache_resource
 def load_model(file):
     mod = models.load_model(file)
     return mod
+
 
 model = load_model("models/rps_v01_56ep_0.9641acc_0.1089loss.h5")
 
@@ -26,12 +28,14 @@ if "correct_guesses" not in st.session_state:
 if "failed_button_disable" not in st.session_state:
     st.session_state["failed_button_disable"] = False
 
+
 def preprocess_image(image, target_size=(150, 150)):
     img = cv2.resize(image, target_size)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img = img / 255.0
     img = np.expand_dims(img, axis=0)
     return img
+
 
 def predict_image(image):
     img = preprocess_image(image)
@@ -41,9 +45,11 @@ def predict_image(image):
     predicted_class_prob = prediction[predicted_class_index]
     return predicted_class_label, predicted_class_prob
 
+
 def random_rps():
     shapes = ["scissors", "rock", "paper"]
     return random.choice(shapes)
+
 
 def rps_result(player_choice, opponent_choice):
     st.session_state["correct_guesses"] += 1
@@ -53,24 +59,32 @@ def rps_result(player_choice, opponent_choice):
         st.session_state["ties"] += 1
         return ":grey[It's a tie!]"
     elif (
-        (player_choice == "rock" and opponent_choice == "scissors") or
-        (player_choice == "paper" and opponent_choice == "rock") or
-        (player_choice == "scissors" and opponent_choice == "paper")
+            (player_choice == "rock" and opponent_choice == "scissors") or
+            (player_choice == "paper" and opponent_choice == "rock") or
+            (player_choice == "scissors" and opponent_choice == "paper")
     ):
-        st.balloons()
         st.session_state["wins"] += 1
         return ":violet[You win!] :sunglasses:"
     else:
         st.session_state["losses"] += 1
         return ":blue[You lose!] :sob:"
 
+
 def calculate_accuracy():
     if st.session_state["total_guesses"] == 0:
         return 0.0
     return (st.session_state["correct_guesses"] / st.session_state["total_guesses"]) * 100
 
+
 @st.fragment()
 def show_result(res):
+    wins, losses, ties = st.columns(3, vertical_alignment="center", border=True)
+    wins.subheader("Wins: " + str(st.session_state["wins"]))
+    losses.subheader("Losses: " + str(st.session_state["losses"]))
+    ties.subheader("Ties: " + str(st.session_state["ties"]))
+
+    st.divider()
+
     left, right = st.columns(2)
 
     with right:
@@ -91,14 +105,9 @@ def show_result(res):
             st.session_state["failed_button_disable"] = True
             st.rerun(scope="fragment")
 
+        accuracy = calculate_accuracy()
+        st.write(f"Accuracy: **{accuracy:.2f}%** of guesses were marked correct.")
 
-    accuracy = calculate_accuracy()
-    st.write(f"Accuracy: **{accuracy:.2f}%** of guesses were marked correct.")
-
-    wins, losses, ties = st.columns(3, vertical_alignment="center", border=True)
-    wins.subheader("Wins: " + str(st.session_state["wins"]))
-    losses.subheader("Losses: " + str(st.session_state["losses"]))
-    ties.subheader("Ties: " + str(st.session_state["ties"]))
 
 st.title("Rock Paper Scissors 👊✌️✋")
 
@@ -157,7 +166,7 @@ if img_file_buffer is not None:
     random_pick.title(rand_text)
     st.divider()
     rps_res = rps_result(predicted_class, random_shape)
-    result  = st.columns([0.3, 0.4, 0.3])[1]
+    result = st.columns([0.3, 0.4, 0.3])[1]
     result.title(rps_res)
     st.divider()
 
