@@ -1,4 +1,4 @@
-# Cool Rock Paper Scissors 👊✋✌️:  
+# Cool Rock Paper Scissors 👊✋✌️  
 ## A Rock  Paper Scissors web-app built with streamlit  
 
 
