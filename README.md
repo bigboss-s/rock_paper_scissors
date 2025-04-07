@@ -1,6 +1,7 @@
 # Cool Rock Paper Scissors 👊✋✌️  
 ## A Rock  Paper Scissors web-app built with streamlit  
 
+[Model used on Kaggle](https://www.kaggle.com/models/alexandredj/rockpaperscissorscnn)
 
 
 The app provides a preview of your webcam, allows you to take a picture of your move and tries to guess what you picked.  
@@ -18,7 +19,6 @@ After the round is done, you can view the overall stats for all your rounds with
 2. Run the local Streamlit server:  
 
 	`streamlit run main.py`
-
 
 
 
